@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫狗知识百科 - 管理面板</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="admin-dashboard" class="admin-dashboard">
+        <!-- 顶部导航 -->
+        <div class="admin-header">
+            <div class="logo-section">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cat%20and%20dog%20icon%20cartoon%20style%20friendly%20pet%20logo&image_size=square" alt="Logo">
+                <h1>猫狗知识百科 - 管理面板</h1>
+            </div>
+            <div class="user-section">
+                <span id="current-user-name" class="user-name">管理员</span>
+                <button id="btn-logout" class="btn btn-danger">退出登录</button>
+                <button id="btn-back-to-main" class="btn btn-secondary">返回主界面</button>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="admin-content">
+            <!-- 统计信息 -->
+            <div class="stats-section">
+                <h2>📊 系统统计</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-users">0</span>
+                        <span class="stat-label">总用户数</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-sessions">0</span>
+                        <span class="stat-label">在线会话</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-messages">0</span>
+                        <span class="stat-label">消息总数</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户管理 -->
+            <div class="users-section">
+                <div class="section-header">
+                    <h2>👥 用户管理</h2>
+                    <div class="search-box">
+                        <input type="text" id="user-search-input" placeholder="搜索用户名或邮箱..." class="search-input">
+                    </div>
+                </div>
+                <div id="user-list" class="user-list">
+                    <div class="loading">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

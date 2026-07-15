@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fauna AI - 猫狗知识百科</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app-container" class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">🐾</div>
+                <div class="header-title">Fauna AI</div>
+            </div>
+            
+            <div class="header-center">
+                <div id="header-status" class="header-status">🐾 Fauna AI 智能助手</div>
+                <a href="http://localhost:8000/observability" target="_blank" style="margin-left:12px;color:#7dd3fc;text-decoration:none;font-size:14px;">监控面板</a>
+            </div>
+            
+            <div class="header-right">
+                <button id="theme-toggle" class="header-btn" title="切换主题">🌙</button>
+                <button id="voice-toggle" class="header-btn" title="语音输入">🎤</button>
+                <div class="user-menu">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-dropdown">
+                        <div class="dropdown-item">
+                            <span class="dropdown-icon">👤</span>
+                            <span id="current-user-name">用户</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <span class="dropdown-icon">🔑</span>
+                            <span id="current-user-role">普通用户</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" id="admin-panel-btn" style="display: none;">
+                            <span class="dropdown-icon">🛠️</span>
+                            <span>管理面板</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <span class="dropdown-icon">💰</span>
+                            <span>API 余额: 100.00</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            <span>设置</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="btn-logout">
+                            <span class="dropdown-icon">🚪</span>
+                            <span>退出登录</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 内容区域 -->
+        <div class="content-wrapper">
+            <!-- 左侧功能面板 -->
+            <aside id="sidebar-left" class="sidebar-left">
+            <!-- 新对话按钮 -->
+            <button id="new-chat-btn" class="new-chat-btn">
+                <span class="btn-icon">➕</span>
+                <span class="btn-text">新对话</span>
+            </button>
+            
+            <!-- 历史对话列表 -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">历史对话</div>
+                <div id="history-container" class="history-container">
+                    <!-- 历史记录将通过JavaScript动态加载 -->
+                </div>
+            </div>
+            
+        </aside>
+        
+        <!-- 主交互区 -->
+        <main class="main-content">
+            <div id="messages-container" class="messages-container">
+                <!-- 欢迎消息 -->
+                <div class="welcome-message">
+                    <div class="welcome-icon">🐾</div>
+                    <h2>欢迎来到 Fauna AI</h2>
+                    <p>我是您的智能宠物助手，请问有什么可以帮助您的？</p>
+                    <div class="welcome-suggestions">
+                        <button class="suggestion-btn">狗狗训练指南</button>
+                        <button class="suggestion-btn">猫咪品种介绍</button>
+                        <button class="suggestion-btn">宠物健康咨询</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="input-field" 
+                        class="input-field" 
+                        placeholder="发消息，Enter 发送，Shift+Enter 换行"
+                        rows="1"
+                    ></textarea>
+                    <button id="send-btn" type="button" class="send-btn">➤</button>
+                </div>
+            </div>
+        </main>
+        
+
+        </div> <!-- 结束 content-wrapper -->
+        
+    </div>
+    
+
+    
+    <!-- 故事绘本生成器弹窗 -->
+    <div id="story-generator-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content story-generator-modal">
+            <div class="modal-header">
+                <h3>故事绘本生成器</h3>
+                <button class="modal-close" onclick="closeStoryGenerator()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: 输入主角信息 -->
+                <div class="story-step" id="story-step-1">
+                    <div class="step-indicator">步骤 1/4</div>
+                    <h4>选择故事主角</h4>
+                    <div class="character-selector">
+                        <button class="character-btn active" data-character="cat">
+                            <span class="character-icon">🐱</span>
+                            <span>猫咪</span>
+                        </button>
+                        <button class="character-btn" data-character="dog">
+                            <span class="character-icon">🐕</span>
+                            <span>狗狗</span>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label>故事主题</label>
+                        <input type="text" id="story-theme" placeholder="例如：勇敢的冒险、友情故事">
+                    </div>
+                    <div class="form-group">
+                        <label>页数</label>
+                        <select id="story-pages">
+                            <option value="3">3页</option>
+                            <option value="5">5页</option>
+                            <option value="8">8页</option>
+                            <option value="10">10页</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary next-btn" onclick="nextStoryStep(1)">下一步</button>
+                </div>
+                
+                <!-- Step 2: 故事内容展示 -->
+                <div class="story-step" id="story-step-2" style="display: none;">
+                    <div class="step-indicator">步骤 2/4</div>
+                    <h4>故事内容</h4>
+                    <div class="story-content-preview">
+                        <div class="story-page">
+                            <div class="page-number">第 1 页</div>
+                            <p id="story-text-1">在一个阳光明媚的早晨，小猫咪花花踏上了一段奇妙的冒险之旅...</p>
+                        </div>
+                        <div class="story-page">
+                            <div class="page-number">第 2 页</div>
+                            <p id="story-text-2">她穿过茂密的森林，遇到了各种各样有趣的小动物...</p>
+                        </div>
+                        <div class="story-page">
+                            <div class="page-number">第 3 页</div>
+                            <p id="story-text-3">最终，花花学会了勇敢和友谊的真正含义...</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="prevStoryStep(2)">上一步</button>
+                    <button class="btn btn-primary next-btn" onclick="nextStoryStep(2)">生成配图</button>
+                </div>
+                
+                <!-- Step 3: 生成配图 -->
+                <div class="story-step" id="story-step-3" style="display: none;">
+                    <div class="step-indicator">步骤 3/4</div>
+                    <h4>生成配图</h4>
+                    <div class="story-images">
+                        <div class="story-image-item">
+                            <div class="image-placeholder">🔄</div>
+                            <div class="image-status">生成中...</div>
+                        </div>
+                        <div class="story-image-item">
+                            <div class="image-placeholder">🔄</div>
+                            <div class="image-status">生成中...</div>
+                        </div>
+                        <div class="story-image-item">
+                            <div class="image-placeholder">🔄</div>
+                            <div class="image-status">生成中...</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="prevStoryStep(3)">上一步</button>
+                    <button class="btn btn-primary next-btn" onclick="nextStoryStep(3)">合成 PDF</button>
+                </div>
+                
+                <!-- Step 4: PDF预览 -->
+                <div class="story-step" id="story-step-4" style="display: none;">
+                    <div class="step-indicator">步骤 4/4</div>
+                    <h4>PDF 预览</h4>
+                    <div class="pdf-preview">
+                        <div class="pdf-page">
+                            <div class="pdf-header">🐾 Fauna AI 故事绘本</div>
+                            <div class="pdf-title">勇敢的小猫咪</div>
+                            <div class="pdf-content">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20cat%20adventure%20forest&image_size=landscape_4_3" alt="故事图片">
+                                <p>在一个阳光明媚的早晨...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="prevStoryStep(4)">上一步</button>
+                    <button class="btn btn-primary" onclick="downloadPDF()">下载 PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 命令菜单 -->
+    <div id="command-menu" class="command-menu" style="display: none;">
+        <div class="command-header">
+            <span class="command-icon">⚡</span>
+            <span>快捷命令</span>
+        </div>
+        <div class="command-list">
+            <div class="command-item" onclick="insertCommand('/draw')">
+                <span class="command-prefix">/draw</span>
+                <span class="command-desc">生成图片</span>
+            </div>
+            <div class="command-item" onclick="insertCommand('/video')">
+                <span class="command-prefix">/video</span>
+                <span class="command-desc">生成视频</span>
+            </div>
+            <div class="command-item" onclick="insertCommand('/identify')">
+                <span class="command-prefix">/identify</span>
+                <span class="command-desc">动物识别</span>
+            </div>
+            <div class="command-item" onclick="insertCommand('/story')">
+                <span class="command-prefix">/story</span>
+                <span class="command-desc">创作故事</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 管理员面板 -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <div class="admin-header">
+            <span class="admin-title">🛠️ 管理面板</span>
+            <button class="admin-close" id="admin-close-btn">✕</button>
+        </div>
+        <div class="admin-content">
+            <!-- 统计信息 -->
+            <div class="admin-section">
+                <h3>📊 系统统计</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-users">0</span>
+                        <span class="stat-label">总用户数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-sessions">0</span>
+                        <span class="stat-label">在线会话</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-messages">0</span>
+                        <span class="stat-label">消息总数</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 用户列表 -->
+            <div class="admin-section">
+                <h3>👥 用户管理</h3>
+                <div class="user-search">
+                    <input type="text" id="user-search-input" placeholder="搜索用户名或邮箱..." class="search-input">
+                </div>
+                <div id="user-list" class="user-list">
+                    <div class="loading">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 管理员面板遮罩 -->
+    <div id="admin-overlay" class="admin-overlay" style="display: none;"></div>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>
